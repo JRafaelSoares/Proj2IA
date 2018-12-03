@@ -62,8 +62,14 @@ class finiteMDP:
 
             
     def traces2Q(self, trace):
-                # implementar esta funcao
-        
+        # implementar esta funcao
+        initialState = trace[0]
+        action = trace[1]
+        finalState = trace[2]
+        reward = trace[3]
+        alpha = 0.1
+        for i in trace:
+            self.Q[initialState][action] = self.Q[initialState][action] + alpha*(reward + self.gamma*numpy.amax(self.Q[finalState]) - self.Q[initialState][action])
 
         return self.Q
     
@@ -75,6 +81,7 @@ class finiteMDP:
 
             
         elif poltype == 'exploration':
+            a = 
             pass
 
                 
