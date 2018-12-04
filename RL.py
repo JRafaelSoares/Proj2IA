@@ -46,10 +46,14 @@ class finiteMDP:
         nQ = np.zeros((self.nS,self.nA))
         while True:
             self.V = np.max(self.Q,axis=1) 
+            
             for a in range(0,self.nA):
                 nQ[:,a] = self.R[:,a] + self.gamma * np.dot(self.P[:,a,:],self.V)
+            
             err = np.linalg.norm(self.Q-nQ)
+            
             self.Q = np.copy(nQ)
+            
             if err<1e-7:
                 break
             
@@ -63,33 +67,40 @@ class finiteMDP:
             
     def traces2Q(self, trace):
         # implementar esta funcao
-        initialState = trace[0]
-        action = trace[1]
-        finalState = trace[2]
-        reward = trace[3]
-        alpha = 0.1
-        for i in trace:
-            self.Q[initialState][action] = self.Q[initialState][action] + alpha*(reward + self.gamma*numpy.amax(self.Q[finalState]) - self.Q[initialState][action])
+        while True:
+            oldQ = np.copy(self.Q)
+            for trajectory in trace:
+            
+                initialState = int(trajectory[0])
+                action = int(trajectory[1])
+                finalState = int(trajectory[2])
+                reward = int(trajectory[3])
+                alpha = 0.8
+            
+                self.Q[initialState][action] = self.Q[initialState][action] + alpha*(reward + self.gamma*np.amax(self.Q[finalState]) - self.Q[initialState][action])
 
+            error = np.linalg.norm(self.Q - oldQ)
+            if error<1e-7:
+                break
         return self.Q
     
     def policy(self, x, poltype = 'exploration', par = []):
         # implementar esta funcao
+        Qvalue, boltzman = self.VI()
         
         if poltype == 'exploitation':
-            pass
+            if par == []:
+                a = np.argmax(Qvalue[x])
+            else:
+                a = np.argmax(par[x])
 
             
         elif poltype == 'exploration':
-            a = 
-            pass
-
+            a = np.argmax(boltzman[x])
                 
         return a
     
     def Q2pol(self, Q, eta=5):
         # implementar esta funcao
-        return np.exp(eta*Q)/np.dot(np.exp(eta*Q),np.array([[1,1],[1,1]]))
-
-
-            
+        ones = np.ones((len(Q[0]), len(Q[0])))
+        return np.exp(eta*Q)/np.dot(np.exp(eta*Q),ones)

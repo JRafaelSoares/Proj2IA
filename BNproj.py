@@ -26,13 +26,6 @@ class Node():
 
         return [1-value, value]
 
-
-#p1 = Node( [[0.001, 0.29],[0.94, 0.95]], [0,1])
-
-#ev = (0, 1, 1, 1, 1)
-
-#print(p1.computeProb(ev))
-
 class BN():
     def __init__(self, gra, prob):
         self.graph = gra
@@ -105,36 +98,4 @@ def computeEvidences(evid):
 
 
     return total_evids
-
-
-
-gra = [[], [], [0,1], [2], [2]]
-
-p1 = Node(np.array([0.001]), gra[0])
-
-p2 = Node(np.array([0.002]), gra[1])
-
-p3 = Node(np.array([[0.001, 0.29],[0.94,0.95]]), gra[2])
-
-p4 = Node(np.array([0.05, 0.9]), gra[3])
-
-p5 = Node(np.array([0.01, 0.7]), gra[4])
-
-prob = [p1, p2, p3, p4, p5]
-
-bn = BN(gra, prob)
-
-jp = []
-ev = (-1, [], [], 1, 1)
-print(bn.computePostProb(ev))
-"""
-for e1 in [0,1]:
-    for e2 in [0, 1]:
-        for e3 in [0, 1]:
-            for e4 in [0, 1]:
-                for e5 in [0, 1]:
-                    jp.append(bn.computeJointProb((e1, e2, e3, e4, e5)))
-
-print("sum joint %.3f (1)" % sum(jp))
-"""
 
