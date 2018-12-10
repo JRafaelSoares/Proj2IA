@@ -1,15 +1,22 @@
+"""
+Joao Rafael Soares n87675
+Maria Catarina Duarte n87681
+Grupo 36
+"""
+
 # -*- coding: utf-8 -*-
 """
 Created on Mon Oct 16 20:31:54 2017
 
 @author: mlopes
 """
+
 import numpy as np
 import random
 
 from tempfile import TemporaryFile
 outfile = TemporaryFile()
-	
+
 class finiteMDP:
 
     def __init__(self, nS, nA, gamma, P=[], R=[], absorv=[]):
@@ -67,40 +74,37 @@ class finiteMDP:
             
     def traces2Q(self, trace):
         # implementar esta funcao
+        self.Q = np.zeros((self.nS,self.nA))
         while True:
             oldQ = np.copy(self.Q)
             for trajectory in trace:
-            
                 initialState = int(trajectory[0])
                 action = int(trajectory[1])
                 finalState = int(trajectory[2])
                 reward = int(trajectory[3])
-                alpha = 0.8
-            
+                alpha = 0.2
+                
                 self.Q[initialState][action] = self.Q[initialState][action] + alpha*(reward + self.gamma*np.amax(self.Q[finalState]) - self.Q[initialState][action])
-
             error = np.linalg.norm(self.Q - oldQ)
+            
             if error<1e-7:
                 break
         return self.Q
     
     def policy(self, x, poltype = 'exploration', par = []):
         # implementar esta funcao
-        Qvalue, boltzman = self.VI()
         
         if poltype == 'exploitation':
-            if par == []:
-                a = np.argmax(Qvalue[x])
-            else:
-                a = np.argmax(par[x])
+            a = np.argmax(par[x])
 
             
         elif poltype == 'exploration':
-            a = np.argmax(boltzman[x])
-                
+            #a = np.argmax(boltzman[x])
+            a = np.random.randint(len(self.Q[x]), size = 1)[0]
         return a
     
     def Q2pol(self, Q, eta=5):
         # implementar esta funcao
         ones = np.ones((len(Q[0]), len(Q[0])))
         return np.exp(eta*Q)/np.dot(np.exp(eta*Q),ones)
+

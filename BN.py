@@ -1,3 +1,9 @@
+"""
+Joao Rafael Soares n87675
+Maria Catarina Duarte n87681
+Grupo 36
+"""
+
 # -*- coding: utf-8 -*-
 """
 Created on Mon Oct 15 15:51:49 2018
@@ -12,17 +18,18 @@ class Node():
     def __init__(self, prob, parents = []):
         self.prob = prob
         self.parents = parents
-        pass
+        
     
     def computeProb(self, evid):
 
         value = self.prob
 
-        for i in self.parents:
-            value = value[evid[i]]
-
         if len(self.parents) == 0:
             value = self.prob[0]
+
+        else:
+            for i in self.parents:
+                value = value[evid[i]]
 
         return [1-value, value]
 
@@ -30,7 +37,7 @@ class BN():
     def __init__(self, gra, prob):
         self.graph = gra
         self.prob = prob
-        pass
+        
 
     def computeJointProb(self, evid):
         value = 1
@@ -40,12 +47,15 @@ class BN():
         return value
 
     def computePostProb(self, evid):
-        sum = 0
+        total = 0
         alpha = 0
+        
         evid = list(evid)
+        
         for i in range(0, len(evid)):
             if evid[i] == -1:
                 pos = i
+                break
 
         evid[pos] = []
 
@@ -59,14 +69,17 @@ class BN():
         evidences = computeEvidences(evid)
 
         for i in evidences:
-            sum += self.computeJointProb(i)
+            total += self.computeJointProb(i)
 
-        return sum/alpha
+        return total/alpha
 
 def computeEvidences(evid):
     total_evids = []
+    
     original = list(evid)
+    
     num = -1
+    
     for i in range(0, len(evid)):
         if original[i] == []:
             num = i
@@ -81,6 +94,7 @@ def computeEvidences(evid):
 
     if isinstance(new_evidence, tuple):
         total_evids.append(new_evidence)
+    
     else:
         for i in new_evidence:
             total_evids.append(i)
@@ -92,6 +106,7 @@ def computeEvidences(evid):
 
     if isinstance(new_evidence, tuple):
         total_evids.append(new_evidence)
+    
     else:
         for i in new_evidence:
             total_evids.append(i)
